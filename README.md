@@ -23,4 +23,4 @@ As part of the international Farm animal Genotype-Tissue Expression ([FarmGTEx](
 
 ---
 ### 3. Citation
-**pending...**
+**Pending...**
