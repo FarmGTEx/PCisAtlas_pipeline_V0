@@ -1,14 +1,14 @@
-🔬# Demo Sequencing Data for Demultiplexing
+#🔬 Demo Sequencing Data for Demultiplexing
 This folder includes a demo dataset and associated scripts to illustrate the demultiplexing and preprocessing workflow.
 
-💻## System Requirements
+##💻 System Requirements
 Operating System:
 Linux (tested on: Linux login01 3.10.0-862.el7.x86_64)
 
 Software Dependencies:
 Please refer to the file environment_list.txt in this directory for a full list of required software and version information.
 
-▶️## Running the Demo
+##▶️ Running the Demo
 Step 1: Demultiplexing
 Run the script:
 bash 01.demultiplex_fastq.sh
