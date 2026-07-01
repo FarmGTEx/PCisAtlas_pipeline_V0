@@ -1,0 +1,47 @@
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+.Rbuildignore
+.Renviron
+
+# Data files (too large for Git)
+*.rds
+*.Rds
+*.RDS
+*.h5
+*.h5ad
+*.arrow
+*.bam
+*.bai
+*.bed.gz
+*.bw
+*.bigWig
+
+# Temporary/output files
+*.pdf
+*.png
+*.jpg
+*.svg
+*.tiff
+!Image/PCisAtlas.png
+*.out
+*.err
+*.log
+tmp/
+temp/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Shell
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
