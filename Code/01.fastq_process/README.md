@@ -60,33 +60,16 @@ This script performs:
 1. **FASTQ filtering** (`fastp`) — adapter trimming, quality filtering (Q≥20), length filtering (≥20bp)
 2. **Alignment** (`chromap`) — scATAC-seq optimized mapping to reference genome
 3. **Fragment processing** (`samtools` + `perl`) — BAM → fragment file conversion, duplicate removal, mitochondrial read filtering
-4. **Quality metrics** (`snapatac2`) — TSS enrichment score calculation per barcode
+4. **Cell-level QC** (`fragment.qc.{1-4}.pl`) — filters on fragment length (< 1000 bp), MT reads, fragment count (1,000–100,000), TSS enrichment (> 2), nucleosome signal (< 4), and FRiP (> 0.2)
+5. **Quality metrics** (`snapatac2`) — TSS enrichment score calculation per barcode
+6. **Visualization** (`QC.plot.r`, `QC.plot.fraglen.r`, `Stat.fragments.r`)
 
-**Expected output**:
-- `${NAME}.fragments.tsv.gz` — Fragment file (chrom, start, end, barcode, count)
+**Expected output** (for a real dataset):
+- `${NAME}.fragments.filtered.tsv.gz` — Filtered fragment file ready for ArchR import
 - `${NAME}.metadata.txt` — Per-barcode metadata (sample, tissue, total fragments, TSS enrichment, etc.)
-- `${NAME}.fastp.json` — Fastp quality report
+- QC plots and summary statistics
 
-### Step 3: Fragment QC
-
-The `fragment.qc.{1-4}.pl` scripts apply additional cell-level filters to the fragment file:
-
-| Script | Filter |
-|--------|--------|
-| `fragment.qc.1.pl` | Fragment length < 1000 bp, remove MT reads |
-| `fragment.qc.2.pl` | Fragment count per barcode: > 1000 and < 100,000 |
-| `fragment.qc.3.pl` | TSS enrichment > 2 |
-| `fragment.qc.4.pl` | Nucleosome signal < 4, FRiP > 0.2 |
-
-**Expected output**: `${NAME}.fragments.filtered.tsv.gz` — Filtered fragment file ready for ArchR import.
-
-### Step 4: Visualization
-
-```bash
-Rscript QC.plot.r           # Fragment statistics and QC metrics summary
-Rscript QC.plot.fraglen.r   # Fragment length distribution
-Rscript Stat.fragments.r    # Per-sample fragment count summary
-```
+> **Note on demo data:** The demo dataset contains only a few thousand synthetic reads and is intended solely to verify the demultiplexing step (Step 1). It will not produce meaningful output from Step 2, as the reads are too sparse to pass the cell-level QC filters (fragment count > 1,000, TSS enrichment > 2, etc.). To test the full pipeline, use a real dataset of sufficient depth.
 
 ---
 
@@ -117,14 +100,10 @@ The `barcodes` file uses a compact range notation: e.g., `T5-1:T5-8` means T5 li
 
 1. **Edit `01.demultiplex_fastq.sh`**: Set `FQ_I1`, `FQ_I2`, `FQ_R1`, `FQ_R2` to your raw FASTQ paths, and `output` to your batch name
 2. **Edit `02.fastq2fragment.sh`**: Set `NAME` to your sample/batch name, and update all `~/refgenome/` paths to your reference files. Replace `${NAME}=SAMPLE` with your sample name and iteratively run for every sample
-3. Run the scripts in order:
+3. Run the scripts in order (QC and visualization are integrated into `02.fastq2fragment.sh`):
    ```bash
    bash 01.demultiplex_fastq.sh
    bash 02.fastq2fragment.sh
-   perl fragment.qc.1.pl  # ... (see individual scripts for usage)
-   perl fragment.qc.2.pl
-   perl fragment.qc.3.pl
-   perl fragment.qc.4.pl
    ```
 
 ### 4. Verify Output
